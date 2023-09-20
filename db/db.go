@@ -40,6 +40,9 @@ func (db *DB) Set(key, value []byte) (err error) {
 func (db *DB) Get(key []byte) (value []byte, err error) {
 	return db.db.Get(key)
 }
+func (db *DB) Del(key []byte) error {
+	return db.db.Delete(key)
+}
 
 func (db *DB) SetLatestHeight(sideChainName string, height int64) (err error) {
 	v, _ := json.Marshal(height)

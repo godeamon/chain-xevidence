@@ -27,12 +27,22 @@ mainChain:
   url: 127.0.0.1:37101
   heightInterval: 1
   # SL1jzovziZ1vgEVifbUGBSFamzYrdQiXp
-  accountMnemonic: 留 趋 护 露 孙 雏 损 委 罩 然 筑 给 #发送交易账户的助记词，需保证余额足够
-  accountMnemonicLanguage: 1
+  senderToAccount:
+    SL1jzovziZ1vgEVifbUGBSFamzYrdQiXp:
+      accountMnemonic: 留 趋 护 露 孙 雏 损 委 罩 然 筑 给
+      accountMnemonicLanguage: 1
+    SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co:
+      accountMnemonic: 留 趋 护 露 孙 雏 损 委 罩 然 筑 给
+      accountMnemonicLanguage: 1
+    default:
+      accountMnemonic: 留 趋 护 露 孙 雏 损 委 罩 然 筑 给
+      accountMnemonicLanguage: 1
 sideChain:
   name: xasset # 业务上的链名字
   url: 127.0.0.1:37101
   startHeigh: 0 #起始高度
   safeHeightInterval: 3 #不会回滚高度
   xChainVerison: 5 # 2：xchain2，5：xchain5.x版本，不支持其他配置
-  chainName: evidence_chain_cross # XuperChain的平行链名字
+  chainName: xuper # XuperChain的平行链名字
+  nodeToSender:
+    TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY: SL1jzovziZ1vgEVifbUGBSFamzYrdQiXp

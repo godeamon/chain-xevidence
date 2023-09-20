@@ -21,7 +21,6 @@ var (
 func main() {
 	flag.Parse()
 	config := config.DefaultConfig()
-	fmt.Println("configPath:", *cfgpath)
 	yamlFile, err := os.ReadFile(*cfgpath)
 	if err != nil {
 		log.Fatal(err)
@@ -33,13 +32,13 @@ func main() {
 	}
 	fmt.Println(config)
 	elog.InitLog()
-	elog.Log.Debug("abc", "a", "b")
+	elog.Log.Debug("XEvidence", "configPath", *cfgpath, "config", config)
 	mgr, err := worker.NewManager(config, *cfgpath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	mgr.Start()
-	log.Print("Evidence tool started.")
+	log.Print("Evidence started.")
 	defer mgr.Stop()
 
 	sigint := make(chan os.Signal, 1)
@@ -47,5 +46,5 @@ func main() {
 
 	<-sigint
 
-	log.Print("Interrupted, evidence tool exieded.")
+	log.Print("Interrupted, evidence exieded.")
 }

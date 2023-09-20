@@ -7,7 +7,6 @@ import (
 	"github.com/godeamon/chain-xevidence/db"
 	"github.com/godeamon/chain-xevidence/worker/listener"
 	"github.com/godeamon/chain-xevidence/worker/processor"
-	"github.com/xuperchain/xuper-sdk-go/v2/account"
 	"github.com/xuperchain/xuperchain/service/pb"
 )
 
@@ -37,8 +36,7 @@ func NewManager(cfg *config.Config, cfgPath string) (*Manager, error) {
 		return nil, err
 	}
 
-	acc := m.mustLoadAccount()
-	p, err := m.newProcessor(cfg, headerChan, db, acc, cfgPath)
+	p, err := m.newProcessor(cfg, headerChan, db, cfgPath)
 	if err != nil {
 		return nil, err
 	}
@@ -54,15 +52,8 @@ func NewManager(cfg *config.Config, cfgPath string) (*Manager, error) {
 func (m *Manager) newListener(cfg *config.Config, headerChan chan *pb.InternalBlock, latestHeight int64, cfgPath string) (listener.Listener, error) {
 	switch cfg.SideChain.XChainVerison {
 	case 2:
-		// todo
-		fmt.Println("xchain v2")
-		l, err := listener.NewXChainV2Listener(cfg, headerChan, latestHeight, cfgPath)
-		if err != nil {
-			return nil, err
-		}
-		return l, nil
+		panic("xchain version 2 not support yet")
 	case 5:
-		fmt.Println("xchain v5")
 		l, err := listener.NewXChainListener(cfg, headerChan, latestHeight, cfgPath)
 		if err != nil {
 			return nil, err
@@ -73,19 +64,13 @@ func (m *Manager) newListener(cfg *config.Config, headerChan chan *pb.InternalBl
 	}
 }
 
-func (m *Manager) newProcessor(cfg *config.Config, headerChan chan *pb.InternalBlock, db *db.DB, acc *account.Account, cfgPath string) (processor.Processor, error) {
+func (m *Manager) newProcessor(cfg *config.Config, headerChan chan *pb.InternalBlock, db *db.DB, cfgPath string) (processor.Processor, error) {
 	switch cfg.SideChain.XChainVerison {
 	case 2:
-		// todo
-		fmt.Println("xchain v2")
-		l, err := processor.NewXChainV2Processor(cfg, headerChan, db, acc, cfgPath)
-		if err != nil {
-			return nil, err
-		}
-		return l, nil
+		panic("xchain version 2 not support yet")
 	case 5:
 		fmt.Println("xchain v5")
-		l, err := processor.NewXChainProcessor(cfg, headerChan, db, acc, cfgPath)
+		l, err := processor.NewXChainProcessor(cfg, headerChan, db, cfgPath)
 		if err != nil {
 			return nil, err
 		}
@@ -101,22 +86,6 @@ func (m *Manager) getLatestHeightFromDB() int64 {
 		return m.cfg.SideChain.StartHeight
 	}
 	return height
-}
-
-func (m *Manager) mustLoadAccount() *account.Account {
-	if m.cfg.MainChain.AccountMnemonic != "" {
-		acc, err := account.RetrieveAccount(m.cfg.MainChain.AccountMnemonic, m.cfg.MainChain.AccountMnemonicLanguage)
-		if err != nil {
-			panic(err)
-		}
-		return acc
-	}
-
-	acc, err := account.GetAccountFromFile(m.cfg.MainChain.AccountPath, m.cfg.MainChain.AccountPasswd)
-	if err != nil {
-		panic(err)
-	}
-	return acc
 }
 
 func (m *Manager) Start() {
@@ -138,14 +107,12 @@ func NewWorker() *Worker {
 }
 
 func (w *Worker) Run() error {
-	// todo error
 	go w.processor.Start()
 	go w.listener.Start()
 	return nil
 }
 
 func (w *Worker) Stop() error {
-	// todo error
 	w.listener.Stop()
 	w.processor.Stop()
 	return nil

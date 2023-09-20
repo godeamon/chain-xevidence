@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/godeamon/chain-xevidence/config"
+	"github.com/godeamon/chain-xevidence/log"
 	"github.com/xuperchain/xuper-sdk-go/v2/xuper"
 	"github.com/xuperchain/xuperchain/service/pb"
 )
@@ -23,6 +24,7 @@ type XChainListener struct {
 }
 
 func NewXChainListener(cfg *config.Config, headerChan chan *pb.InternalBlock, latestHeight int64, cfgPath string) (*XChainListener, error) {
+	log.Log.Info("XuperChain Listner New")
 	c, err := xuper.New(cfg.SideChain.URL, xuper.WithConfigFile(cfgPath))
 	if err != nil {
 		return nil, err
@@ -38,15 +40,17 @@ func NewXChainListener(cfg *config.Config, headerChan chan *pb.InternalBlock, la
 
 // Start called by async goroutinue
 func (x *XChainListener) Start() error {
+	log.Log.Info("XuperChain Listner Start")
 	x.run()
 	return nil
 }
 
-func (x *XChainListener) run() { //TODO context
+func (x *XChainListener) run() {
 	for {
 		select {
 		case <-x.stop:
-			fmt.Println("Listener exit")
+			fmt.Println("XuperChain listener exit")
+			log.Log.Info("XuperChain listner exit")
 			return
 		default:
 			tip := x.getTipBlockHeight()
@@ -59,10 +63,10 @@ func (x *XChainListener) run() { //TODO context
 				// 这里是同步的，不能使用异步，避免 processor 处理时高度错乱
 				select {
 				case <-x.stop:
-					fmt.Println("Listener exit")
+					fmt.Println("XuperChain listener exit")
+					log.Log.Info("XuperChain listner exit")
 					return
-				default:
-					x.headerChan <- b
+				case x.headerChan <- b:
 					x.latestHeight = b.Height
 				}
 			}
@@ -101,6 +105,7 @@ func (x *XChainListener) getSafeBlocks(tipHeight int64) []*pb.InternalBlock {
 	blocks, err := x.queryBlocks(x.latestHeight+1, to)
 	if err != nil {
 		fmt.Println("XChainListener queryBlocks failed:", err)
+		log.Log.Error("XuperChain listner queryBlocks failed", "err", err)
 	}
 	return blocks
 }

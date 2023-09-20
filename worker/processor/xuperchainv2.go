@@ -22,7 +22,7 @@ type XChainV2Processor struct {
 	stop       chan struct{}
 }
 
-func NewXChainV2Processor(cfg *config.Config, headerChan chan *pb.InternalBlock, db *db.DB, account *account.Account, cfgPath string) (*XChainV2Processor, error) {
+func NewXChainV2Processor(cfg *config.Config, headerChan chan *pb.InternalBlock, db *db.DB, cfgPath string) (*XChainV2Processor, error) {
 	c, err := xuper.New(cfg.MainChain.URL, xuper.WithConfigFile(cfgPath))
 	if err != nil {
 		return nil, err
@@ -32,7 +32,6 @@ func NewXChainV2Processor(cfg *config.Config, headerChan chan *pb.InternalBlock,
 		client:     c,
 		headerChan: headerChan,
 		db:         db,
-		account:    account,
 		stop:       make(chan struct{}),
 	}
 	return processor, nil
