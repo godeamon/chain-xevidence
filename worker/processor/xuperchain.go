@@ -235,7 +235,7 @@ func (p *XChainProcessor) process(header *EvidenceBlock, needCheck bool) error {
 		return err
 	}
 	args := p.makeArgs(header)
-	log.Log.Debug("XuperChain Processor process", "height", header.Height, "proposer", string(header.Proposer), "sender", acc, "args", args)
+	log.Log.Debug("XuperChain Processor process", "height", header.Height, "proposer", string(header.Proposer), "sender", acc.Address, "args", args)
 	req, err := xuper.NewInvokeContractRequest(acc, xuper.Xkernel3Module, "$XEvidence", "Save", args)
 	if err != nil {
 		return err

@@ -83,7 +83,7 @@ func (x *XChainListener) getTipBlockHeight() int64 {
 	for _, s := range status.SystemsStatus.BcsStatus {
 		if s.Bcname == x.cfg.SideChain.ChainName {
 			h := s.GetBlock().Height
-			log.Log.Info("XuperChain listner side chain height ", h)
+			log.Log.Info("XuperChain listner side chain status", "height", h)
 			return h
 		}
 	}
