@@ -79,6 +79,7 @@ func (x *XChainListener) getTipBlockHeight() int64 {
 	status, err := x.client.QuerySystemStatus()
 	if err != nil {
 		fmt.Println("XChainListener QuerySystemStatus failed:", err)
+		return 0
 	}
 	for _, s := range status.SystemsStatus.BcsStatus {
 		if s.Bcname == x.cfg.SideChain.ChainName {
